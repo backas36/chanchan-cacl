@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import type { Session } from '@/types';
+import itemData from '@/data/itemData.json';
 
 interface TransactionHistoryProps {
   sessions: Session[];
@@ -6,13 +8,35 @@ interface TransactionHistoryProps {
   userName: string;
 }
 
+const priceToLabel = new Map(itemData.items.map((item) => [item.price, item.label]));
+
+function formatTime(iso: string): string {
+  return new Date(iso).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+}
+
 export function TransactionHistory({ sessions, activeSession, userName }: TransactionHistoryProps) {
+  const [expandedTxId, setExpandedTxId] = useState<string | null>(null);
+  const [copiedSessionId, setCopiedSessionId] = useState<string | null>(null);
   const allSessions = activeSession ? [activeSession, ...sessions] : sessions;
 
-  const handleCopySession = (session: Session) => {
+  const handleCopySession = async (session: Session) => {
     const date = new Date(session.startTime).toLocaleDateString('zh-TW');
-    const text = `${userName} ${date} 賺了 $${session.sessionTotal} 元`;
-    navigator.clipboard.writeText(text);
+    const startTime = formatTime(session.startTime);
+    const endTime = session.endTime ? formatTime(session.endTime) : '進行中';
+    const text = `${userName} ${date} ${startTime} ~ ${endTime} 賺了 $${session.sessionTotal} 元`;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const el = document.createElement('textarea');
+      el.value = text;
+      el.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    }
+    setCopiedSessionId(session.id);
+    setTimeout(() => setCopiedSessionId(null), 2000);
   };
 
   if (allSessions.length === 0) {
@@ -21,42 +45,63 @@ export function TransactionHistory({ sessions, activeSession, userName }: Transa
 
   return (
     <div className="space-y-4">
-      {allSessions.map((session) => (
-        <div key={session.id} className="rounded-xl bg-white p-4 shadow-sm">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm text-gray-500">
-              {new Date(session.startTime).toLocaleDateString('zh-TW')}
-            </span>
-            <span className="text-lg font-bold">${session.sessionTotal}</span>
-          </div>
+      {allSessions.map((session) => {
+        const date = new Date(session.startTime).toLocaleDateString('zh-TW');
+        const startTime = formatTime(session.startTime);
+        const endTime = session.endTime ? formatTime(session.endTime) : '進行中';
 
-          <ul className="space-y-1">
-            {session.transactions.map((tx) => (
-              <li key={tx.id} className="flex justify-between rounded bg-gray-50 px-2 py-1 text-sm">
-                <span className="text-gray-500">
-                  {new Date(tx.timestamp).toLocaleTimeString('zh-TW', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </span>
-                <span>
-                  {tx.discount !== 0 && (
-                    <span className="mr-1 text-red-400">{tx.discount}</span>
+        return (
+          <div key={session.id} className="rounded-xl bg-white p-4 shadow-sm">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-sm text-gray-500">
+                {date}　{startTime} ~ {endTime}
+              </span>
+              <span className="text-lg font-bold">${session.sessionTotal}</span>
+            </div>
+
+            <ul className="space-y-1">
+              {session.transactions.map((tx) => (
+                <li key={tx.id}>
+                  <div
+                    className="flex cursor-pointer justify-between rounded bg-gray-50 px-2 py-1 text-sm"
+                    onClick={() => setExpandedTxId(expandedTxId === tx.id ? null : tx.id)}
+                  >
+                    <span className="text-gray-500">
+                      {new Date(tx.timestamp).toLocaleTimeString('zh-TW', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                    <span>
+                      {tx.discount !== 0 && (
+                        <span className="mr-1 text-red-400">{tx.discount}</span>
+                      )}
+                      <span className="font-medium">${tx.total}</span>
+                    </span>
+                  </div>
+                  {expandedTxId === tx.id && (
+                    <ul className="mt-1 space-y-0.5 px-2">
+                      {tx.items.map((item, idx) => (
+                        <li key={idx} className="flex justify-between text-xs text-gray-500">
+                          <span>{item.isCustom ? '自訂' : (priceToLabel.get(item.price) ?? '自訂')} ×{item.quantity}</span>
+                          <span>${item.price * item.quantity}</span>
+                        </li>
+                      ))}
+                    </ul>
                   )}
-                  <span className="font-medium">${tx.total}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
 
-          <button
-            onClick={() => handleCopySession(session)}
-            className="mt-2 w-full rounded-lg bg-gray-100 py-2 text-sm font-medium"
-          >
-            複製結果
-          </button>
-        </div>
-      ))}
+            <button
+              onClick={() => handleCopySession(session)}
+              className={`mt-2 w-full rounded-lg py-2 text-sm font-medium ${copiedSessionId === session.id ? 'bg-green-100 text-green-700' : 'bg-gray-100'}`}
+            >
+              {copiedSessionId === session.id ? '✓ 已複製' : '複製結果'}
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }

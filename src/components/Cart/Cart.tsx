@@ -20,12 +20,12 @@ export function Cart({ onCheckout }: CartProps) {
       ) : (
         <ul className='space-y-1'>
           {items.map((item) => (
-            <li key={item.price} className='flex items-center gap-2 rounded-lg bg-cream-light p-2'>
-              <span className='flex-1 font-bold'>{priceToLabel[item.price] ?? '自訂'}</span>
+            <li key={`${item.price}-${item.isCustom ? 'custom' : 'catalog'}`} className='flex items-center gap-2 rounded-lg bg-cream-light p-2'>
+              <span className='flex-1 font-bold'>{item.isCustom ? '自訂' : (priceToLabel[item.price] ?? '自訂')}</span>
               <span className='w-10 text-center text-sage'>x{item.quantity}</span>
               <span className='w-16 text-right text-sm font-medium'>${item.price * item.quantity}</span>
               <button
-                onClick={() => removeItem(item.price)}
+                onClick={() => removeItem(item.price, item.isCustom)}
                 className='ml-2 rounded-2xl bg-red-100 px-2 py-0.5 font-bold text-red-600'
                 aria-label='-'
               >

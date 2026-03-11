@@ -32,6 +32,13 @@ const mockSession: Session = {
   sessionTotal: 230,
 };
 
+const mockActiveSession: Session = {
+  id: 'sess2',
+  startTime: '2024-06-15T06:30:00.000Z',
+  transactions: [],
+  sessionTotal: 0,
+};
+
 describe('TransactionHistory', () => {
   it('shows empty state when no sessions', () => {
     render(<TransactionHistory sessions={[]} activeSession={null} userName="Ashi" />);
@@ -59,5 +66,79 @@ describe('TransactionHistory', () => {
     await userEvent.click(screen.getByRole('button', { name: /複製結果/i }));
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining('Ashi'));
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining('230'));
+  });
+
+  // --- new tests ---
+
+  it('displays time range for ended session', () => {
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName="Ashi" />);
+    // check ~ separator between start and end time (accounts for any locale time format)
+    expect(screen.getByText((content) => content.includes(' ~ '))).toBeInTheDocument();
+  });
+
+  it('shows 進行中 for active session without endTime', () => {
+    render(<TransactionHistory sessions={[]} activeSession={mockActiveSession} userName="Ashi" />);
+    expect(screen.getByText(/進行中/)).toBeInTheDocument();
+  });
+
+  it('copies session summary including start time', async () => {
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName="Ashi" />);
+    await userEvent.click(screen.getByRole('button', { name: /複製結果/i }));
+    // should contain a time string like HH:MM
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+      expect.stringMatching(/\d{2}:\d{2}/),
+    );
+  });
+
+  it('transaction item details are hidden initially', () => {
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName="Ashi" />);
+    expect(screen.queryByText(/小泡芙/)).not.toBeInTheDocument();
+  });
+
+  it('shows item details when transaction is clicked', async () => {
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName="Ashi" />);
+    await userEvent.click(screen.getByText('$180'));
+    expect(screen.getByText(/小泡芙/)).toBeInTheDocument();
+  });
+
+  it('hides item details on second click', async () => {
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName="Ashi" />);
+    await userEvent.click(screen.getByText('$180'));
+    expect(screen.getByText(/小泡芙/)).toBeInTheDocument();
+    await userEvent.click(screen.getByText('$180'));
+    expect(screen.queryByText(/小泡芙/)).not.toBeInTheDocument();
+  });
+
+  it('copies session summary with full time range', async () => {
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName="Ashi" />);
+    await userEvent.click(screen.getByRole('button', { name: /複製結果/i }));
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining(' ~ '));
+  });
+
+  it('shows 已複製 feedback after copy button click', async () => {
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName="Ashi" />);
+    await userEvent.click(screen.getByRole('button', { name: /複製結果/i }));
+    expect(screen.getByText(/已複製/)).toBeInTheDocument();
+  });
+
+  it('shows 自訂 for unknown price in item details', async () => {
+    const sessionWithCustom: Session = {
+      ...mockSession,
+      transactions: [
+        {
+          id: 'tx3',
+          timestamp: '2024-01-01T13:00:00.000Z',
+          items: [{ price: 75, quantity: 1 }],
+          subtotal: 75,
+          discount: 0,
+          total: 75,
+          received: 75,
+          change: 0,
+        },
+      ],
+    };
+    render(<TransactionHistory sessions={[sessionWithCustom]} activeSession={null} userName="Ashi" />);
+    await userEvent.click(screen.getByText('$75'));
+    expect(screen.getByText(/自訂/)).toBeInTheDocument();
   });
 });

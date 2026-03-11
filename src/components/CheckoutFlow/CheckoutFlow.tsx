@@ -41,9 +41,9 @@ export function CheckoutFlow({ onClose }: CheckoutFlowProps) {
       {/* 品項明細 */}
       <div className="space-y-1 rounded-xl bg-cream p-3">
         {items.map((item) => {
-          const label = priceToLabel[item.price] ?? '自訂';
+          const label = item.isCustom ? '自訂' : (priceToLabel[item.price] ?? '自訂');
           return (
-            <div key={item.price} className="flex justify-between text-sm">
+            <div key={`${item.price}-${item.isCustom ? 'custom' : 'catalog'}`} className="flex justify-between text-sm">
               <span>{label}</span>
               <span className="text-gray-500">x{item.quantity}</span>
               <span>${item.price * item.quantity}</span>

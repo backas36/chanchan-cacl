@@ -57,6 +57,23 @@ describe('useCartStore', () => {
     });
   });
 
+  describe('isCustom', () => {
+    it('custom item does not merge with same-price catalog item', () => {
+      const { result } = renderHook(() => useCartStore());
+      act(() => result.current.addItem(60));
+      act(() => result.current.addItem(60, true));
+      expect(result.current.items).toHaveLength(2);
+    });
+
+    it('custom items with same price merge together', () => {
+      const { result } = renderHook(() => useCartStore());
+      act(() => result.current.addItem(60, true));
+      act(() => result.current.addItem(60, true));
+      expect(result.current.items).toHaveLength(1);
+      expect(result.current.items[0].quantity).toBe(2);
+    });
+  });
+
   describe('subtotal', () => {
     it('returns 0 for empty cart', () => {
       const { result } = renderHook(() => useCartStore());

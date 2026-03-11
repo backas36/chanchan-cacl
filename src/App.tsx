@@ -21,26 +21,34 @@ function App() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-sm flex-col bg-cream">
-      {/* Header */}
-      <div className="p-3">
+    <div className="mx-auto flex h-dvh max-w-sm flex-col bg-cream">
+      {/* Header — 固定置頂 */}
+      <div className="shrink-0 p-3">
         <SessionPanel userName={userName} />
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-3">
+      {/* Content — 剩餘空間，捲軸在這層 */}
+      <div className="relative flex-1 overflow-y-auto p-3">
         {tab === 'calculator' ? (
-          <div className="space-y-3">
-            <Cart onCheckout={() => setShowCheckout(true)} />
-            <PriceGrid />
-          </div>
+          <>
+            <div className="space-y-3">
+              <Cart onCheckout={() => setShowCheckout(true)} />
+              <PriceGrid />
+            </div>
+            {!activeSession && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-cream/80 backdrop-blur-sm">
+                <p className="text-lg font-bold text-gray-600">還沒開始場次</p>
+                <p className="text-sm text-gray-400">請按上方「開始場次」來開始收銀</p>
+              </div>
+            )}
+          </>
         ) : (
           <TransactionHistory sessions={sessions} activeSession={activeSession} userName={userName} />
         )}
       </div>
 
-      {/* Bottom Tabs */}
-      <div className="flex border-t bg-white">
+      {/* Bottom Tabs — 固定置底 */}
+      <div className="shrink-0 flex border-t bg-white">
         <button
           onClick={() => setTab('calculator')}
           className={`flex-1 py-3 text-sm font-medium ${tab === 'calculator' ? 'border-t-2 border-brand text-brand' : 'text-gray-400'}`}

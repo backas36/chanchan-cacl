@@ -13,7 +13,7 @@ export function PriceGrid() {
   const handleConfirmCustom = () => {
     const amount = parseInt(customAmount, 10);
     if (!isNaN(amount) && amount > 0) {
-      addItem(amount);
+      addItem(amount, true);
       setCustomAmount('');
       setShowCustom(false);
     }
@@ -27,7 +27,7 @@ export function PriceGrid() {
             key={item.price}
             onClick={() => addItem(item.price)}
             disabled={disabled}
-            className="flex h-24 flex-col items-center justify-between rounded-xl bg-cream p-3 active:bg-brand-light active:text-white disabled:opacity-40"
+            className="flex h-24 flex-col items-center justify-between rounded-xl border border-brand/20 bg-cream p-3 shadow-sm active:bg-brand-light active:text-white disabled:opacity-40"
           >
             <span className="text-sm font-bold leading-tight">{item.label}</span>
             {item.variants.length > 0 && (
@@ -41,7 +41,7 @@ export function PriceGrid() {
         <button
           onClick={() => setShowCustom(true)}
           disabled={disabled}
-          className="h-24 rounded-xl bg-gray-100 p-3 text-lg font-bold active:bg-gray-300 disabled:opacity-40"
+          className="h-24 rounded-xl border border-gray-300 bg-gray-100 p-3 text-lg font-bold shadow-sm active:bg-gray-300 disabled:opacity-40"
         >
           自訂
         </button>
@@ -54,7 +54,7 @@ export function PriceGrid() {
             placeholder="金額"
             value={customAmount}
             onChange={(e) => setCustomAmount(e.target.value)}
-            className="flex-1 rounded border p-2"
+            className="flex-1 rounded border bg-white p-2"
             autoFocus
           />
           <button
