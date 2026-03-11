@@ -63,7 +63,7 @@ function App() {
       {tab === 'history' && (
         <button
           onClick={handleReset}
-          className='absolute bottom-[6dvh] rounded-lg border border-red-50 px-2 py-1 text-[10px] font-medium text-red-200 active:bg-red-50'
+          className='absolute bottom-[6dvh] rounded-lg border border-red-50 px-2 py-1 text-[10px] font-medium text-red-300 active:bg-red-50'
         >
           重置全部資料
         </button>
