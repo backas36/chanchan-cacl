@@ -57,6 +57,18 @@ describe('CheckoutFlow', () => {
     expect(screen.getAllByText(/\$200/).length).toBeGreaterThanOrEqual(1);
   });
 
+  it('resets discount on button click', async () => {
+    useCartStore.getState().addItem(200);
+    render(<CheckoutFlow onClose={() => {}} />);
+    await userEvent.click(screen.getByRole('button', { name: '-10' }));
+    await userEvent.click(screen.getByRole('button', { name: '-10' }));
+    expect(screen.getAllByText(/\$180/).length).toBeGreaterThanOrEqual(1);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+    expect(screen.getAllByText(/\$200/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryByText(/折扣/)).not.toBeInTheDocument();
+  });
+
   it('shows 自訂 for custom price items', () => {
     useCartStore.getState().addItem(75);
     render(<CheckoutFlow onClose={() => {}} />);

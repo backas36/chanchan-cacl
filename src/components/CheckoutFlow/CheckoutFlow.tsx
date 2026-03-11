@@ -68,9 +68,12 @@ export function CheckoutFlow({ onClose }: CheckoutFlowProps) {
           >
             +10
           </button>
+          <button onClick={() => setDiscount(0)} className='rounded-lg bg-gray-50 px-4 py-1 text-lg text-gray-400'>
+            Reset
+          </button>
         </div>
         {discount !== 0 && (
-          <span className={`text-base ${discount > 0 ? 'text-green-600' : 'text-red-500'}`}>
+          <span className={`text-base font-bold ${discount > 0 ? 'text-green-600' : 'text-red-500'}`}>
             {discount > 0 ? `+${discount}` : `折扣 ${discount}`}
           </span>
         )}
