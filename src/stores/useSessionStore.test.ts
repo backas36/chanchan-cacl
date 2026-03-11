@@ -5,6 +5,7 @@ import type { CartItem } from '@/types';
 const mockItems: CartItem[] = [{ price: 100, quantity: 2 }];
 
 beforeEach(() => {
+  localStorage.clear();
   useSessionStore.getState().resetAll();
 });
 
@@ -92,6 +93,49 @@ describe('useSessionStore', () => {
       act(() => result.current.startSession());
       act(() => result.current.endSession());
       expect(result.current.sessions).toHaveLength(2);
+    });
+  });
+
+  describe('localStorage persistence', () => {
+    it('persists sessions to localStorage after ending session', () => {
+      const { result } = renderHook(() => useSessionStore());
+      act(() => result.current.startSession());
+      act(() =>
+        result.current.addTransaction({
+          items: mockItems,
+          subtotal: 100,
+          discount: 0,
+          total: 100,
+          received: 100,
+          change: 0,
+        }),
+      );
+      act(() => result.current.endSession());
+      const raw = localStorage.getItem('cc_sessions');
+      expect(raw).not.toBeNull();
+      const stored = JSON.parse(raw!);
+      expect(stored.state.sessions).toHaveLength(1);
+      expect(stored.state.sessions[0].transactions).toHaveLength(1);
+    });
+
+    it('persists activeSession transactions to localStorage', () => {
+      const { result } = renderHook(() => useSessionStore());
+      act(() => result.current.startSession());
+      act(() =>
+        result.current.addTransaction({
+          items: mockItems,
+          subtotal: 200,
+          discount: 0,
+          total: 200,
+          received: 200,
+          change: 0,
+        }),
+      );
+      const raw = localStorage.getItem('cc_sessions');
+      expect(raw).not.toBeNull();
+      const stored = JSON.parse(raw!);
+      expect(stored.state.activeSession).not.toBeNull();
+      expect(stored.state.activeSession.transactions).toHaveLength(1);
     });
   });
 });
