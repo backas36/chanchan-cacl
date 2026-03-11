@@ -15,6 +15,22 @@ export function Cart({ onCheckout }: CartProps) {
 
   return (
     <div className='flex flex-col gap-2'>
+      <div className='mt-4 flex gap-2'>
+        <button
+          onClick={clearCart}
+          className='flex-1 rounded-xl bg-gray-200 p-3 font-bold disabled:opacity-40'
+          disabled={isEmpty || !activeSession}
+        >
+          清空
+        </button>
+        <button
+          onClick={onCheckout}
+          disabled={isEmpty || !activeSession}
+          className='bg-brand flex-2 rounded-xl p-3 font-bold text-white disabled:opacity-40'
+        >
+          結帳
+        </button>
+      </div>
       {isEmpty ? (
         <p className='text-sage py-4 text-center'>購物車空的</p>
       ) : (
@@ -42,23 +58,6 @@ export function Cart({ onCheckout }: CartProps) {
       <div className='flex items-center justify-between border-t pt-2'>
         <span className='text-gray-600'>小計</span>
         <span className='text-xl font-bold'>${subtotal}</span>
-      </div>
-
-      <div className='flex gap-2'>
-        <button
-          onClick={clearCart}
-          className='flex-1 rounded-xl bg-gray-200 p-3 font-bold disabled:opacity-40'
-          disabled={isEmpty || !activeSession}
-        >
-          清空
-        </button>
-        <button
-          onClick={onCheckout}
-          disabled={isEmpty || !activeSession}
-          className='bg-brand flex-2 rounded-xl p-3 font-bold text-white disabled:opacity-40'
-        >
-          結帳
-        </button>
       </div>
     </div>
   );

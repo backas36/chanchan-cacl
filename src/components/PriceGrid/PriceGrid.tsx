@@ -20,18 +20,18 @@ export function PriceGrid() {
   };
 
   return (
-    <div className='mt-4'>
+    <div className='mt-2'>
       <div className='grid grid-cols-3 gap-x-2 gap-y-6'>
         {itemData.items.map((item) => (
           <button
             key={item.price}
             onClick={() => addItem(item.price)}
             disabled={disabled}
-            className='border-brand/20 bg-cream active:bg-brand-light flex h-34 flex-col items-center justify-between rounded-xl border p-3 shadow-sm active:text-white disabled:opacity-40'
+            className='border-brand/20 bg-cream active:bg-brand-light flex h-32 flex-col items-center justify-between rounded-xl border p-3 shadow-sm active:text-white disabled:opacity-40'
           >
             <span className='text-2xl leading-tight font-bold'>{item.label}</span>
             {item.variants.length > 0 && (
-              <span className='text-brand text-xl leading-tight'>{item.variants.join('/')}</span>
+              <span className='text-brand text-lg leading-tight'>{item.variants.join('/')}</span>
             )}
             <span className='mt-1 text-xl font-bold'>${item.price}</span>
           </button>
@@ -39,7 +39,7 @@ export function PriceGrid() {
         <button
           onClick={() => setShowCustom(true)}
           disabled={disabled}
-          className='h-34 rounded-xl border border-gray-300 bg-gray-100 p-3 text-lg font-bold shadow-sm active:bg-gray-300 disabled:opacity-40'
+          className='h-32 rounded-xl border border-gray-300 bg-gray-100 p-3 text-lg font-bold shadow-sm active:bg-gray-300 disabled:opacity-40'
         >
           自訂
         </button>

@@ -45,8 +45,8 @@ function App() {
         {tab === 'calculator' ? (
           <>
             <div className='space-y-3'>
-              <Cart onCheckout={() => setShowCheckout(true)} />
               <PriceGrid />
+              <Cart onCheckout={() => setShowCheckout(true)} />
             </div>
             {!activeSession && (
               <div className='bg-cream/80 absolute inset-0 flex flex-col items-center justify-center gap-4 backdrop-blur-sm'>
@@ -63,9 +63,9 @@ function App() {
       {tab === 'history' && (
         <button
           onClick={handleReset}
-          className='absolute bottom-[6dvh] rounded-lg border border-red-50 px-2 py-1 text-[10px] font-medium text-red-300 active:bg-red-50'
+          className='absolute bottom-[8dvh] left-2 rounded-lg border border-red-50 px-2 py-1 text-[10px] font-medium text-red-300 active:bg-red-50'
         >
-          重置全部資料
+          重置
         </button>
       )}
       {/* Bottom Tabs — 固定置底 */}
