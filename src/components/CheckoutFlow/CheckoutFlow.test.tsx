@@ -18,11 +18,39 @@ describe('CheckoutFlow', () => {
     expect(screen.getAllByText(/\$150/).length).toBeGreaterThanOrEqual(1);
   });
 
-  it('shows discounted total after applying discount', async () => {
+  it('shows item label in breakdown', () => {
+    useCartStore.getState().addItem(100);
+    render(<CheckoutFlow onClose={() => {}} />);
+    expect(screen.getByText('小泡芙')).toBeInTheDocument();
+  });
+
+  it('shows item quantity and line total in breakdown', () => {
+    useCartStore.getState().addItem(100);
+    useCartStore.getState().addItem(100);
+    render(<CheckoutFlow onClose={() => {}} />);
+    expect(screen.getByText('x2')).toBeInTheDocument();
+    expect(screen.getAllByText('$200').length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('applies -10 discount on button click', async () => {
     useCartStore.getState().addItem(200);
     render(<CheckoutFlow onClose={() => {}} />);
-    await userEvent.click(screen.getByRole('button', { name: '-50' }));
-    expect(screen.getAllByText(/\$150/).length).toBeGreaterThanOrEqual(1);
+    await userEvent.click(screen.getByRole('button', { name: '-10' }));
+    expect(screen.getAllByText(/\$190/).length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('applies +10 to restore discount on button click', async () => {
+    useCartStore.getState().addItem(200);
+    render(<CheckoutFlow onClose={() => {}} />);
+    await userEvent.click(screen.getByRole('button', { name: '-10' }));
+    await userEvent.click(screen.getByRole('button', { name: '+10' }));
+    expect(screen.getAllByText(/\$200/).length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('shows 自訂 for custom price items', () => {
+    useCartStore.getState().addItem(75);
+    render(<CheckoutFlow onClose={() => {}} />);
+    expect(screen.getByText('自訂')).toBeInTheDocument();
   });
 
   it('completes checkout and clears cart', async () => {

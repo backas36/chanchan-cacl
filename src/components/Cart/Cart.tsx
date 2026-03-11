@@ -1,4 +1,9 @@
 import { useCartStore } from '@/stores/useCartStore';
+import itemData from '@/data/itemData.json';
+
+const priceToLabel: Record<number, string> = Object.fromEntries(
+  itemData.items.map((item) => [item.price, item.label])
+);
 
 interface CartProps {
   onCheckout: () => void;
@@ -16,11 +21,9 @@ export function Cart({ onCheckout }: CartProps) {
         <ul className="space-y-1">
           {items.map((item) => (
             <li key={item.price} className="flex items-center justify-between rounded-lg bg-white p-2">
-              <span className="font-bold">${item.price}</span>
+              <span className="font-bold">{priceToLabel[item.price] ?? '自訂'}</span>
               <span className="text-gray-500">x{item.quantity}</span>
-              {item.quantity > 1 && (
-                <span className="text-sm font-medium">${item.price * item.quantity}</span>
-              )}
+              <span className="text-sm font-medium">${item.price * item.quantity}</span>
               <button
                 onClick={() => removeItem(item.price)}
                 className="ml-2 rounded-full bg-red-100 px-2 py-0.5 text-red-600 font-bold"

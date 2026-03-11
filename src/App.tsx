@@ -59,7 +59,7 @@ function App() {
       {showCheckout && (
         <div className="fixed inset-0 bg-black/50" onClick={() => setShowCheckout(false)}>
           <div
-            className="absolute bottom-0 left-0 right-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white"
+            className="absolute bottom-0 left-0 right-0 max-h-[95vh] overflow-y-auto rounded-t-2xl bg-white"
             onClick={(e) => e.stopPropagation()}
           >
             <CheckoutFlow onClose={() => setShowCheckout(false)} />

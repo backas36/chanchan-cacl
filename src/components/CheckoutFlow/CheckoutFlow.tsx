@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useCartStore } from '@/stores/useCartStore';
 import { useSessionStore } from '@/stores/useSessionStore';
-import { DiscountPanel } from '@/components/DiscountPanel/DiscountPanel';
 import { ChangeCalculator } from '@/components/ChangeCalculator/ChangeCalculator';
+import itemData from '@/data/itemData.json';
+
+const priceToLabel: Record<number, string> = Object.fromEntries(
+  itemData.items.map((item) => [item.price, item.label])
+);
 
 interface CheckoutFlowProps {
   onClose: () => void;
@@ -34,15 +38,41 @@ export function CheckoutFlow({ onClose }: CheckoutFlowProps) {
     <div className="space-y-4 p-4">
       <h2 className="text-lg font-bold">結帳</h2>
 
-      <div className="flex justify-between text-gray-600">
-        <span>小計</span>
-        <span className="font-bold">${subtotal}</span>
+      {/* 品項明細 */}
+      <div className="space-y-1 rounded-xl bg-gray-50 p-3">
+        {items.map((item) => {
+          const label = priceToLabel[item.price] ?? '自訂';
+          return (
+            <div key={item.price} className="flex justify-between text-sm">
+              <span>{label}</span>
+              <span className="text-gray-500">x{item.quantity}</span>
+              <span>${item.price * item.quantity}</span>
+            </div>
+          );
+        })}
       </div>
 
-      <DiscountPanel discount={discount} onDiscountChange={setDiscount} />
+      {/* 折扣 */}
+      <div className="flex items-center justify-between">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setDiscount((d) => d - 10)}
+            className="rounded-lg bg-red-100 px-3 py-1 font-bold text-red-700"
+          >
+            -10
+          </button>
+          <button
+            onClick={() => setDiscount((d) => d + 10)}
+            className="rounded-lg bg-green-100 px-3 py-1 font-bold text-green-700"
+          >
+            +10
+          </button>
+        </div>
+        {discount !== 0 && <span className="text-sm text-red-500">折扣 {discount}</span>}
+      </div>
 
       <div className="flex justify-between font-bold">
-        <span>折後總計</span>
+        <span>總計</span>
         <span className="text-xl">${total}</span>
       </div>
 

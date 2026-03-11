@@ -13,14 +13,20 @@ describe('Cart', () => {
     expect(screen.getByText(/空的/i)).toBeInTheDocument();
   });
 
-  it('displays cart items with price and quantity', () => {
+  it('displays cart items with label and quantity', () => {
     useCartStore.getState().addItem(100);
     useCartStore.getState().addItem(100);
     useCartStore.getState().addItem(50);
     render(<Cart onCheckout={() => {}} />);
-    expect(screen.getByText('$100')).toBeInTheDocument();
+    expect(screen.getByText('小泡芙')).toBeInTheDocument();
     expect(screen.getByText('x2')).toBeInTheDocument();
-    expect(screen.getByText('$50')).toBeInTheDocument();
+    expect(screen.getByText('餅乾')).toBeInTheDocument();
+  });
+
+  it('shows 自訂 for unknown price in cart', () => {
+    useCartStore.getState().addItem(75);
+    render(<Cart onCheckout={() => {}} />);
+    expect(screen.getByText('自訂')).toBeInTheDocument();
   });
 
   it('shows subtotal', () => {
