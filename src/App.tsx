@@ -14,7 +14,12 @@ function App() {
   const [userName, setUserName] = useLocalStorage('cc_user_name', '');
   const [tab, setTab] = useState<Tab>('calculator');
   const [showCheckout, setShowCheckout] = useState(false);
-  const { sessions, activeSession } = useSessionStore();
+  const { sessions, activeSession, resetAll } = useSessionStore();
+
+  const handleResetAll = () => {
+    resetAll();
+    setUserName('');
+  };
 
   if (!userName) {
     return <NameSetupModal onSave={setUserName} />;
@@ -43,7 +48,12 @@ function App() {
             )}
           </>
         ) : (
-          <TransactionHistory sessions={sessions} activeSession={activeSession} userName={userName} />
+          <TransactionHistory
+            sessions={sessions}
+            activeSession={activeSession}
+            userName={userName}
+            onResetAll={handleResetAll}
+          />
         )}
       </div>
 
