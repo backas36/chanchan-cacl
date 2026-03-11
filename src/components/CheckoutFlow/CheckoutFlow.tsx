@@ -2,9 +2,6 @@ import { useState } from 'react';
 import { useCartStore } from '@/stores/useCartStore';
 import { useSessionStore } from '@/stores/useSessionStore';
 import { ChangeCalculator } from '@/components/ChangeCalculator/ChangeCalculator';
-import itemData from '@/data/itemData.json';
-
-const priceToLabel: Record<number, string> = Object.fromEntries(itemData.items.map((item) => [item.price, item.label]));
 
 interface CheckoutFlowProps {
   onClose: () => void;
@@ -39,15 +36,16 @@ export function CheckoutFlow({ onClose }: CheckoutFlowProps) {
       {/* 品項明細 */}
       <div className='bg-cream space-y-1 rounded-xl p-3'>
         {items.map((item) => {
-          const label = item.isCustom ? '自訂' : (priceToLabel[item.price] ?? '自訂');
+          const label = item.isCustom ? '自訂' : (item.label ?? '自訂');
           return (
             <div
-              key={`${item.price}-${item.isCustom ? 'custom' : 'catalog'}`}
-              className='flex justify-between text-base'
+              key={`${item.label ?? item.price}-${item.isCustom ? 'custom' : 'catalog'}`}
+              className='flex items-center gap-2 text-base'
             >
-              <span>{label}</span>
-              <span className='text-gray-500'>x{item.quantity}</span>
-              <span>${item.price * item.quantity}</span>
+              <span className='flex-1 font-bold'>{label}</span>
+              <span className='text-sm text-gray-400'>${item.price}</span>
+              <span className='w-10 text-center text-gray-500'>x{item.quantity}</span>
+              <span className='w-16 text-right text-sm font-medium'>${item.price * item.quantity}</span>
             </div>
           );
         })}

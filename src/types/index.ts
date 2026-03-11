@@ -2,6 +2,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   isCustom?: boolean;
+  label?: string;
 }
 
 export interface Transaction {

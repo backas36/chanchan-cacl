@@ -19,7 +19,7 @@ describe('CheckoutFlow', () => {
   });
 
   it('shows item label in breakdown', () => {
-    useCartStore.getState().addItem(100);
+    useCartStore.getState().addItem(100, undefined, '小泡芙');
     render(<CheckoutFlow onClose={() => {}} />);
     expect(screen.getByText('小泡芙')).toBeInTheDocument();
   });
@@ -91,6 +91,14 @@ describe('CheckoutFlow', () => {
     await userEvent.type(input, '100');
     await userEvent.click(screen.getByRole('button', { name: /完成/i }));
     expect(useSessionStore.getState().activeSession?.transactions).toHaveLength(1);
+  });
+
+  it('shows unit price in item breakdown', () => {
+    useCartStore.getState().addItem(100, undefined, '小泡芙');
+    useCartStore.getState().addItem(100, undefined, '小泡芙');
+    render(<CheckoutFlow onClose={() => {}} />);
+    // 小計是 $200，但也要看到單價 $100
+    expect(screen.getAllByText('$100').length).toBeGreaterThanOrEqual(1);
   });
 
   it('calls onClose after completing checkout', async () => {

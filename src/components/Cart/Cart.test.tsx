@@ -16,9 +16,9 @@ describe('Cart', () => {
   });
 
   it('displays cart items with label and quantity', () => {
-    useCartStore.getState().addItem(100);
-    useCartStore.getState().addItem(100);
-    useCartStore.getState().addItem(50);
+    useCartStore.getState().addItem(100, undefined, '小泡芙');
+    useCartStore.getState().addItem(100, undefined, '小泡芙');
+    useCartStore.getState().addItem(50, undefined, '餅乾');
     render(<Cart onCheckout={() => {}} />);
     expect(screen.getByText('小泡芙')).toBeInTheDocument();
     expect(screen.getByText('x2')).toBeInTheDocument();
@@ -75,5 +75,13 @@ describe('Cart', () => {
     render(<Cart onCheckout={() => {}} />);
     expect(screen.getByRole('button', { name: /結帳/i })).toBeDisabled();
     expect(screen.getByRole('button', { name: /清空/i })).toBeDisabled();
+  });
+
+  it('displays unit price for each cart item', () => {
+    useCartStore.getState().addItem(100, undefined, '小泡芙');
+    useCartStore.getState().addItem(100, undefined, '小泡芙');
+    render(<Cart onCheckout={() => {}} />);
+    // 顯示單價 $100（不是小計 $200）
+    expect(screen.getByText('$100')).toBeInTheDocument();
   });
 });

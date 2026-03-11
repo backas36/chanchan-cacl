@@ -57,6 +57,15 @@ describe('useCartStore', () => {
     });
   });
 
+  describe('same price different label', () => {
+    it('items with same price but different label are separate cart items', () => {
+      const { result } = renderHook(() => useCartStore());
+      act(() => result.current.addItem(200, undefined, '草莓雪Q餅'));
+      act(() => result.current.addItem(200, undefined, '套餐'));
+      expect(result.current.items).toHaveLength(2);
+    });
+  });
+
   describe('isCustom', () => {
     it('custom item does not merge with same-price catalog item', () => {
       const { result } = renderHook(() => useCartStore());

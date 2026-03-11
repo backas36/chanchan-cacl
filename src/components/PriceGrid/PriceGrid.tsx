@@ -24,8 +24,8 @@ export function PriceGrid() {
       <div className='grid grid-cols-3 gap-x-2 gap-y-6'>
         {itemData.items.map((item) => (
           <button
-            key={item.price}
-            onClick={() => addItem(item.price)}
+            key={item.label}
+            onClick={() => addItem(item.price, undefined, item.label)}
             disabled={disabled}
             className='border-brand/20 bg-cream active:bg-brand-light flex h-32 flex-col items-center justify-between rounded-xl border p-3 shadow-sm active:text-white disabled:opacity-40'
           >

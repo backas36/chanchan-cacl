@@ -11,7 +11,7 @@ const mockSession: Session = {
     {
       id: 'tx1',
       timestamp: '2024-01-01T12:00:00.000Z',
-      items: [{ price: 200, quantity: 1, isCustom: false }],
+      items: [{ price: 200, quantity: 1, isCustom: false, label: '草莓雪Q餅' }],
       subtotal: 200,
       discount: -20,
       total: 180,

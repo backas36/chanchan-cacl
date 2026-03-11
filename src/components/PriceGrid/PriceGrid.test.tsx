@@ -31,7 +31,8 @@ describe('PriceGrid', () => {
   it('renders prices on all buttons', () => {
     render(<PriceGrid />);
     [50, 60, 80, 100, 160, 180, 200].forEach((p) => {
-      expect(screen.getByRole('button', { name: new RegExp(`\\$${p}`) })).toBeInTheDocument();
+      const buttons = screen.getAllByRole('button', { name: new RegExp(`\\$${p}`) });
+      expect(buttons.length).toBeGreaterThanOrEqual(1);
     });
   });
 

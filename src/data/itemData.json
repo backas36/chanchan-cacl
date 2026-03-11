@@ -6,6 +6,8 @@
     { "price": 100, "label": "小泡芙", "variants": [] },
     { "price": 160, "label": "Oreo雪Q餅", "variants": [] },
     { "price": 180, "label": "金沙雪Q餅", "variants": [] },
-    { "price": 200, "label": "草莓雪Q餅", "variants": [] }
+    { "price": 200, "label": "草莓雪Q餅", "variants": [] },
+    { "price": 200, "label": "套餐", "variants": ["瑪德蓮", "MIX"] },
+    { "price": 500, "label": "大套餐", "variants": ["三Q"] }
   ]
 }

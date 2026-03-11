@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import type { Session } from '@/types';
-import itemData from '@/data/itemData.json';
 
 interface TransactionHistoryProps {
   sessions: Session[];
   activeSession: Session | null;
   userName: string;
 }
-
-const priceToLabel = new Map(itemData.items.map((item) => [item.price, item.label]));
 
 function formatTime(iso: string): string {
   return new Date(iso).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
@@ -87,11 +84,11 @@ export function TransactionHistory({ sessions, activeSession, userName }: Transa
                     {expandedTxId === tx.id && (
                       <ul className='mt-1 space-y-0.5 px-2'>
                         {tx.items.map((item, idx) => (
-                          <li key={idx} className='flex justify-between text-xs text-gray-500'>
-                            <span>
-                              {item.isCustom ? '自訂' : (priceToLabel.get(item.price) ?? '自訂')} ×{item.quantity}
-                            </span>
-                            <span>${item.price * item.quantity}</span>
+                          <li key={idx} className='flex items-center gap-2 text-xs text-gray-500'>
+                            <span className='flex-1 font-medium'>{item.isCustom ? '自訂' : (item.label ?? '自訂')}</span>
+                            <span className='text-gray-400'>${item.price}</span>
+                            <span className='w-8 text-center'>×{item.quantity}</span>
+                            <span className='w-14 text-right'>${item.price * item.quantity}</span>
                           </li>
                         ))}
                       </ul>

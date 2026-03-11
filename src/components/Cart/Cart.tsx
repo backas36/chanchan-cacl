@@ -1,8 +1,5 @@
 import { useCartStore } from '@/stores/useCartStore';
 import { useSessionStore } from '@/stores/useSessionStore';
-import itemData from '@/data/itemData.json';
-
-const priceToLabel: Record<number, string> = Object.fromEntries(itemData.items.map((item) => [item.price, item.label]));
 
 interface CartProps {
   onCheckout: () => void;
@@ -37,14 +34,15 @@ export function Cart({ onCheckout }: CartProps) {
         <ul className='space-y-1'>
           {items.map((item) => (
             <li
-              key={`${item.price}-${item.isCustom ? 'custom' : 'catalog'}`}
+              key={`${item.label ?? item.price}-${item.isCustom ? 'custom' : 'catalog'}`}
               className='bg-cream-light flex items-center gap-2 rounded-lg p-2'
             >
-              <span className='flex-1 font-bold'>{item.isCustom ? '自訂' : (priceToLabel[item.price] ?? '自訂')}</span>
+              <span className='flex-1 font-bold'>{item.isCustom ? '自訂' : (item.label ?? '自訂')}</span>
+              <span className='text-gray-400 text-sm'>${item.price}</span>
               <span className='text-sage w-10 text-center'>x{item.quantity}</span>
               <span className='w-16 text-right text-sm font-medium'>${item.price * item.quantity}</span>
               <button
-                onClick={() => removeItem(item.price, item.isCustom)}
+                onClick={() => removeItem(item.price, item.isCustom, item.label)}
                 className='ml-2 rounded-xl bg-red-100 px-3 py-0.5 font-bold text-red-600'
                 aria-label='-'
               >
