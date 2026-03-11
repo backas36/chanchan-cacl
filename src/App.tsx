@@ -21,7 +21,7 @@ function App() {
   }
 
   return (
-    <div className="mx-auto flex h-dvh max-w-sm flex-col bg-cream">
+    <div className="flex h-dvh flex-col bg-cream">
       {/* Header — 固定置頂 */}
       <div className="shrink-0 p-3">
         <SessionPanel userName={userName} />
