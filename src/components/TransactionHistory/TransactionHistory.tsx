@@ -19,6 +19,9 @@ export function TransactionHistory({ sessions, activeSession, userName, onResetA
   const [expandedTxId, setExpandedTxId] = useState<string | null>(null);
   const [copiedSessionId, setCopiedSessionId] = useState<string | null>(null);
   const allSessions = activeSession ? [activeSession, ...sessions] : sessions;
+  const sortedSessions = [...allSessions].sort(
+    (a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
+  );
 
   const handleCopySession = async (session: Session) => {
     const date = new Date(session.startTime).toLocaleDateString('zh-TW');
@@ -50,10 +53,10 @@ export function TransactionHistory({ sessions, activeSession, userName, onResetA
 
   return (
     <div className='space-y-4'>
-      {allSessions.length === 0 ? (
+      {sortedSessions.length === 0 ? (
         <p className='py-8 text-center text-gray-400'>沒有紀錄</p>
       ) : (
-        allSessions.map((session) => {
+        sortedSessions.map((session) => {
           const date = new Date(session.startTime).toLocaleDateString('zh-TW');
           const startTime = formatTime(session.startTime);
           const endTime = session.endTime ? formatTime(session.endTime) : '進行中';
