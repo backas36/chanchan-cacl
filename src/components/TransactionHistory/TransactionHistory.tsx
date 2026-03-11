@@ -24,7 +24,7 @@ export function TransactionHistory({ sessions, activeSession, userName, onResetA
     const date = new Date(session.startTime).toLocaleDateString('zh-TW');
     const startTime = formatTime(session.startTime);
     const endTime = session.endTime ? formatTime(session.endTime) : '進行中';
-    const text = `${userName} ${date} ${startTime} ~ ${endTime} 賺了 $${session.sessionTotal} 元`;
+    const text = `😎 ${userName} 在 ${date} ${startTime} ~ ${endTime} 賺了 $${session.sessionTotal} 元  🍋 🫨`;
     try {
       await navigator.clipboard.writeText(text);
     } catch {
@@ -81,7 +81,11 @@ export function TransactionHistory({ sessions, activeSession, userName, onResetA
                         })}
                       </span>
                       <span>
-                        {tx.discount !== 0 && <span className='mr-1 text-red-400'>{tx.discount}</span>}
+                        {tx.discount !== 0 && (
+                          <span className={`mr-1 ${tx.discount > 0 ? 'text-green-500' : 'text-red-400'}`}>
+                            {tx.discount > 0 ? `+${tx.discount}` : tx.discount}
+                          </span>
+                        )}
                         <span className='font-medium'>${tx.total}</span>
                       </span>
                     </div>
