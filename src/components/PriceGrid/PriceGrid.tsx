@@ -20,47 +20,42 @@ export function PriceGrid() {
   };
 
   return (
-    <div>
-      <div className="grid grid-cols-3 gap-2">
+    <div className='mt-4'>
+      <div className='grid grid-cols-3 gap-x-2 gap-y-6'>
         {itemData.items.map((item) => (
           <button
             key={item.price}
             onClick={() => addItem(item.price)}
             disabled={disabled}
-            className="flex h-24 flex-col items-center justify-between rounded-xl border border-brand/20 bg-cream p-3 shadow-sm active:bg-brand-light active:text-white disabled:opacity-40"
+            className='border-brand/20 bg-cream active:bg-brand-light flex h-34 flex-col items-center justify-between rounded-xl border p-3 shadow-sm active:text-white disabled:opacity-40'
           >
-            <span className="text-sm font-bold leading-tight">{item.label}</span>
+            <span className='text-2xl leading-tight font-bold'>{item.label}</span>
             {item.variants.length > 0 && (
-              <span className="text-xs text-brand leading-tight">
-                {item.variants.join('/')}
-              </span>
+              <span className='text-brand text-xl leading-tight'>{item.variants.join('/')}</span>
             )}
-            <span className="text-lg font-bold mt-1">${item.price}</span>
+            <span className='mt-1 text-xl font-bold'>${item.price}</span>
           </button>
         ))}
         <button
           onClick={() => setShowCustom(true)}
           disabled={disabled}
-          className="h-24 rounded-xl border border-gray-300 bg-gray-100 p-3 text-lg font-bold shadow-sm active:bg-gray-300 disabled:opacity-40"
+          className='h-34 rounded-xl border border-gray-300 bg-gray-100 p-3 text-lg font-bold shadow-sm active:bg-gray-300 disabled:opacity-40'
         >
           自訂
         </button>
       </div>
 
       {showCustom && (
-        <div className="mt-2 flex gap-2">
+        <div className='mt-2 flex gap-2'>
           <input
-            type="number"
-            placeholder="金額"
+            type='number'
+            placeholder='金額'
             value={customAmount}
             onChange={(e) => setCustomAmount(e.target.value)}
-            className="flex-1 rounded border bg-white p-2"
+            className='flex-1 rounded border bg-white p-2'
             autoFocus
           />
-          <button
-            onClick={handleConfirmCustom}
-            className="rounded bg-brand px-4 py-2 font-bold text-white"
-          >
+          <button onClick={handleConfirmCustom} className='bg-brand rounded px-4 py-2 font-bold text-white'>
             確認
           </button>
           <button
@@ -68,7 +63,7 @@ export function PriceGrid() {
               setShowCustom(false);
               setCustomAmount('');
             }}
-            className="rounded bg-gray-200 px-4 py-2"
+            className='rounded bg-gray-200 px-4 py-2'
           >
             取消
           </button>

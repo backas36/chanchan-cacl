@@ -16,17 +16,20 @@ export function Cart({ onCheckout }: CartProps) {
   return (
     <div className='flex flex-col gap-2'>
       {isEmpty ? (
-        <p className='py-4 text-center text-sage'>購物車空的</p>
+        <p className='text-sage py-4 text-center'>購物車空的</p>
       ) : (
         <ul className='space-y-1'>
           {items.map((item) => (
-            <li key={`${item.price}-${item.isCustom ? 'custom' : 'catalog'}`} className='flex items-center gap-2 rounded-lg bg-cream-light p-2'>
+            <li
+              key={`${item.price}-${item.isCustom ? 'custom' : 'catalog'}`}
+              className='bg-cream-light flex items-center gap-2 rounded-lg p-2'
+            >
               <span className='flex-1 font-bold'>{item.isCustom ? '自訂' : (priceToLabel[item.price] ?? '自訂')}</span>
-              <span className='w-10 text-center text-sage'>x{item.quantity}</span>
+              <span className='text-sage w-10 text-center'>x{item.quantity}</span>
               <span className='w-16 text-right text-sm font-medium'>${item.price * item.quantity}</span>
               <button
                 onClick={() => removeItem(item.price, item.isCustom)}
-                className='ml-2 rounded-2xl bg-red-100 px-2 py-0.5 font-bold text-red-600'
+                className='ml-2 rounded-xl bg-red-100 px-3 py-0.5 font-bold text-red-600'
                 aria-label='-'
               >
                 -
@@ -52,7 +55,7 @@ export function Cart({ onCheckout }: CartProps) {
         <button
           onClick={onCheckout}
           disabled={isEmpty || !activeSession}
-          className='flex-2 rounded-xl bg-brand p-3 font-bold text-white disabled:opacity-40'
+          className='bg-brand flex-2 rounded-xl p-3 font-bold text-white disabled:opacity-40'
         >
           結帳
         </button>
