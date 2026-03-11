@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Session, Transaction, CartItem } from '@/types';
+import type { Session, Transaction } from '@/types';
 
 type NewTransaction = Omit<Transaction, 'id' | 'timestamp'>;
 
