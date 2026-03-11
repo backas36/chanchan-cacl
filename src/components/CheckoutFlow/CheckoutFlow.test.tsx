@@ -37,6 +37,15 @@ describe('CheckoutFlow', () => {
     render(<CheckoutFlow onClose={() => {}} />);
     await userEvent.click(screen.getByRole('button', { name: '-10' }));
     expect(screen.getAllByText(/\$190/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/折扣 -10/)).toBeInTheDocument();
+  });
+
+  it('shows + sign for positive discount', async () => {
+    useCartStore.getState().addItem(200);
+    render(<CheckoutFlow onClose={() => {}} />);
+    await userEvent.click(screen.getByRole('button', { name: '+10' }));
+    expect(screen.getAllByText(/\$210/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/^\+10$/)).toBeInTheDocument();
   });
 
   it('applies +10 to restore discount on button click', async () => {

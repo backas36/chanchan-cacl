@@ -66,7 +66,11 @@ export function CheckoutFlow({ onClose }: CheckoutFlowProps) {
             +10
           </button>
         </div>
-        {discount !== 0 && <span className='text-sm text-red-500'>折扣 {discount}</span>}
+        {discount !== 0 && (
+          <span className={`text-sm ${discount > 0 ? 'text-green-600' : 'text-red-500'}`}>
+            {discount > 0 ? `+${discount}` : `折扣 ${discount}`}
+          </span>
+        )}
       </div>
 
       <div className='flex justify-between font-bold'>
