@@ -45,7 +45,8 @@ describe('CheckoutFlow', () => {
     render(<CheckoutFlow onClose={() => {}} />);
     await userEvent.click(screen.getByRole('button', { name: '+10' }));
     expect(screen.getAllByText(/\$210/).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText(/^\+10$/)).toBeInTheDocument();
+    // 抓取非按鈕的那個 +10 (span)
+    expect(screen.getByText(/^\+10$/, { selector: 'span' })).toBeInTheDocument();
   });
 
   it('applies +10 to restore discount on button click', async () => {

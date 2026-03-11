@@ -5,7 +5,8 @@ import { ChangeCalculator } from './ChangeCalculator';
 describe('ChangeCalculator', () => {
   it('shows total amount', () => {
     render(<ChangeCalculator total={150} onReceivedChange={() => {}} received={0} />);
-    expect(screen.getByText(/\$150/)).toBeInTheDocument();
+    // 因為找零預設是 received - total = 0 - 150 = -150，現在顯示為 $-150
+    expect(screen.getByText(/\$-150/)).toBeInTheDocument();
   });
 
   it('calculates and displays change', () => {

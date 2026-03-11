@@ -11,7 +11,7 @@ const mockSession: Session = {
     {
       id: 'tx1',
       timestamp: '2024-01-01T12:00:00.000Z',
-      items: [{ price: 100, quantity: 2 }],
+      items: [{ price: 200, quantity: 1, isCustom: false }],
       subtotal: 200,
       discount: -20,
       total: 180,
@@ -21,7 +21,7 @@ const mockSession: Session = {
     {
       id: 'tx2',
       timestamp: '2024-01-01T14:00:00.000Z',
-      items: [{ price: 50, quantity: 1 }],
+      items: [{ price: 50, quantity: 1, isCustom: false }],
       subtotal: 50,
       discount: 0,
       total: 50,
@@ -41,174 +41,78 @@ const mockActiveSession: Session = {
 
 describe('TransactionHistory', () => {
   it('shows empty state when no sessions', () => {
-    render(
-      <TransactionHistory
-        sessions={[]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
+    render(<TransactionHistory sessions={[]} activeSession={null} userName='Ashi' />);
     expect(screen.getByText(/沒有紀錄/i)).toBeInTheDocument();
   });
 
   it('displays session total', () => {
-    render(
-      <TransactionHistory
-        sessions={[mockSession]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName='Ashi' />);
     expect(screen.getByText(/\$230/)).toBeInTheDocument();
   });
 
   it('displays transactions within session', () => {
-    render(
-      <TransactionHistory
-        sessions={[mockSession]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName='Ashi' />);
     expect(screen.getByText(/\$180/)).toBeInTheDocument();
     expect(screen.getByText(/\$50/)).toBeInTheDocument();
   });
 
   it('shows discount in transaction', () => {
-    render(
-      <TransactionHistory
-        sessions={[mockSession]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName='Ashi' />);
     expect(screen.getByText(/-20/)).toBeInTheDocument();
   });
 
   it('copies session summary on button click', async () => {
-    render(
-      <TransactionHistory
-        sessions={[mockSession]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
-    await userEvent.click(screen.getByRole('button', { name: /複製結果/i }));
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName='Ashi' />);
+    await userEvent.click(screen.getByRole('button', { name: /複製你的業績/i }));
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining('Ashi'));
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining('230'));
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining('🍋 🫨'));
   });
 
-  // --- new tests ---
-
   it('displays time range for ended session', () => {
-    render(
-      <TransactionHistory
-        sessions={[mockSession]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
-    // check ~ separator between start and end time (accounts for any locale time format)
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName='Ashi' />);
     expect(screen.getByText((content) => content.includes(' ~ '))).toBeInTheDocument();
   });
 
   it('shows 進行中 for active session without endTime', () => {
-    render(
-      <TransactionHistory
-        sessions={[]}
-        activeSession={mockActiveSession}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
+    render(<TransactionHistory sessions={[]} activeSession={mockActiveSession} userName='Ashi' />);
     expect(screen.getByText(/進行中/)).toBeInTheDocument();
   });
 
   it('copies session summary including start time', async () => {
-    render(
-      <TransactionHistory
-        sessions={[mockSession]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
-    await userEvent.click(screen.getByRole('button', { name: /複製結果/i }));
-    // should contain a time string like HH:MM
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-      expect.stringMatching(/\d{2}:\d{2}/),
-    );
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName='Ashi' />);
+    await userEvent.click(screen.getByRole('button', { name: /複製你的業績/i }));
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringMatching(/\d{2}:\d{2}/));
   });
 
   it('transaction item details are hidden initially', () => {
-    render(
-      <TransactionHistory
-        sessions={[mockSession]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
-    expect(screen.queryByText(/小泡芙/)).not.toBeInTheDocument();
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName='Ashi' />);
+    expect(screen.queryByText(/草莓雪Q餅/)).not.toBeInTheDocument();
   });
 
   it('shows item details when transaction is clicked', async () => {
-    render(
-      <TransactionHistory
-        sessions={[mockSession]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName='Ashi' />);
     await userEvent.click(screen.getByText('$180'));
-    expect(screen.getByText(/小泡芙/)).toBeInTheDocument();
+    expect(screen.getByText(/草莓雪Q餅/)).toBeInTheDocument();
   });
 
   it('hides item details on second click', async () => {
-    render(
-      <TransactionHistory
-        sessions={[mockSession]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName='Ashi' />);
     await userEvent.click(screen.getByText('$180'));
-    expect(screen.getByText(/小泡芙/)).toBeInTheDocument();
+    expect(screen.getByText(/草莓雪Q餅/)).toBeInTheDocument();
     await userEvent.click(screen.getByText('$180'));
-    expect(screen.queryByText(/小泡芙/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/草莓雪Q餅/)).not.toBeInTheDocument();
   });
 
   it('copies session summary with full time range', async () => {
-    render(
-      <TransactionHistory
-        sessions={[mockSession]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
-    await userEvent.click(screen.getByRole('button', { name: /複製結果/i }));
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName='Ashi' />);
+    await userEvent.click(screen.getByRole('button', { name: /複製你的業績/i }));
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining(' ~ '));
   });
 
   it('shows 已複製 feedback after copy button click', async () => {
-    render(
-      <TransactionHistory
-        sessions={[mockSession]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
-    await userEvent.click(screen.getByRole('button', { name: /複製結果/i }));
+    render(<TransactionHistory sessions={[mockSession]} activeSession={null} userName='Ashi' />);
+    await userEvent.click(screen.getByRole('button', { name: /複製你的業績/i }));
     expect(screen.getByText(/已複製/)).toBeInTheDocument();
   });
 
@@ -219,7 +123,7 @@ describe('TransactionHistory', () => {
         {
           id: 'tx3',
           timestamp: '2024-01-01T13:00:00.000Z',
-          items: [{ price: 75, quantity: 1 }],
+          items: [{ price: 75, quantity: 1, isCustom: true }],
           subtotal: 75,
           discount: 0,
           total: 75,
@@ -228,59 +132,8 @@ describe('TransactionHistory', () => {
         },
       ],
     };
-    render(
-      <TransactionHistory
-        sessions={[sessionWithCustom]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={vi.fn()}
-      />,
-    );
+    render(<TransactionHistory sessions={[sessionWithCustom]} activeSession={null} userName='Ashi' />);
     await userEvent.click(screen.getByText('$75'));
     expect(screen.getByText(/自訂/)).toBeInTheDocument();
-  });
-
-  it('calls onResetAll when reset button is clicked and confirmed twice', async () => {
-    const onResetAll = vi.fn();
-    const confirmSpy = vi.spyOn(window, 'confirm');
-    confirmSpy.mockReturnValue(true);
-
-    render(
-      <TransactionHistory
-        sessions={[]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={onResetAll}
-      />,
-    );
-
-    await userEvent.click(screen.getByRole('button', { name: /重置全部資料/i }));
-
-    expect(confirmSpy).toHaveBeenCalledTimes(2);
-    expect(onResetAll).toHaveBeenCalled();
-
-    confirmSpy.mockRestore();
-  });
-
-  it('does NOT call onResetAll if first confirm is cancelled', async () => {
-    const onResetAll = vi.fn();
-    const confirmSpy = vi.spyOn(window, 'confirm');
-    confirmSpy.mockReturnValueOnce(false);
-
-    render(
-      <TransactionHistory
-        sessions={[]}
-        activeSession={null}
-        userName="Ashi"
-        onResetAll={onResetAll}
-      />,
-    );
-
-    await userEvent.click(screen.getByRole('button', { name: /重置全部資料/i }));
-
-    expect(confirmSpy).toHaveBeenCalledTimes(1);
-    expect(onResetAll).not.toHaveBeenCalled();
-
-    confirmSpy.mockRestore();
   });
 });
