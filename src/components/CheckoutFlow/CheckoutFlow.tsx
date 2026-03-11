@@ -39,7 +39,7 @@ export function CheckoutFlow({ onClose }: CheckoutFlowProps) {
       <h2 className="text-lg font-bold">結帳</h2>
 
       {/* 品項明細 */}
-      <div className="space-y-1 rounded-xl bg-gray-50 p-3">
+      <div className="space-y-1 rounded-xl bg-cream p-3">
         {items.map((item) => {
           const label = priceToLabel[item.price] ?? '自訂';
           return (
@@ -80,7 +80,7 @@ export function CheckoutFlow({ onClose }: CheckoutFlowProps) {
 
       <button
         onClick={handleComplete}
-        className="w-full rounded-xl bg-green-500 p-4 text-lg font-bold text-white"
+        className="w-full rounded-xl bg-brand p-4 text-lg font-bold text-white"
       >
         完成
       </button>

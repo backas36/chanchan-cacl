@@ -21,7 +21,7 @@ function App() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-sm flex-col bg-gray-50">
+    <div className="mx-auto flex min-h-screen max-w-sm flex-col bg-cream">
       {/* Header */}
       <div className="p-3">
         <SessionPanel userName={userName} />
@@ -43,13 +43,13 @@ function App() {
       <div className="flex border-t bg-white">
         <button
           onClick={() => setTab('calculator')}
-          className={`flex-1 py-3 text-sm font-medium ${tab === 'calculator' ? 'border-t-2 border-amber-500 text-amber-600' : 'text-gray-400'}`}
+          className={`flex-1 py-3 text-sm font-medium ${tab === 'calculator' ? 'border-t-2 border-brand text-brand' : 'text-gray-400'}`}
         >
           收銀機
         </button>
         <button
           onClick={() => setTab('history')}
-          className={`flex-1 py-3 text-sm font-medium ${tab === 'history' ? 'border-t-2 border-amber-500 text-amber-600' : 'text-gray-400'}`}
+          className={`flex-1 py-3 text-sm font-medium ${tab === 'history' ? 'border-t-2 border-brand text-brand' : 'text-gray-400'}`}
         >
           歷史紀錄
         </button>

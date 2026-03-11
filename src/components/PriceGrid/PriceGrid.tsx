@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { useCartStore } from '@/stores/useCartStore';
+import { useSessionStore } from '@/stores/useSessionStore';
 import itemData from '@/data/itemData.json';
 
 export function PriceGrid() {
   const addItem = useCartStore((s) => s.addItem);
+  const activeSession = useSessionStore((s) => s.activeSession);
+  const disabled = !activeSession;
   const [showCustom, setShowCustom] = useState(false);
   const [customAmount, setCustomAmount] = useState('');
 
@@ -23,11 +26,12 @@ export function PriceGrid() {
           <button
             key={item.price}
             onClick={() => addItem(item.price)}
-            className="flex h-24 flex-col items-center justify-between rounded-xl bg-amber-100 p-3 active:bg-amber-300"
+            disabled={disabled}
+            className="flex h-24 flex-col items-center justify-between rounded-xl bg-cream p-3 active:bg-brand-light active:text-white disabled:opacity-40"
           >
             <span className="text-sm font-bold leading-tight">{item.label}</span>
             {item.variants.length > 0 && (
-              <span className="text-xs text-amber-700 leading-tight">
+              <span className="text-xs text-brand leading-tight">
                 {item.variants.join('/')}
               </span>
             )}
@@ -36,7 +40,8 @@ export function PriceGrid() {
         ))}
         <button
           onClick={() => setShowCustom(true)}
-          className="h-24 rounded-xl bg-gray-100 p-3 text-lg font-bold active:bg-gray-300"
+          disabled={disabled}
+          className="h-24 rounded-xl bg-gray-100 p-3 text-lg font-bold active:bg-gray-300 disabled:opacity-40"
         >
           自訂
         </button>
@@ -54,7 +59,7 @@ export function PriceGrid() {
           />
           <button
             onClick={handleConfirmCustom}
-            className="rounded bg-amber-400 px-4 py-2 font-bold"
+            className="rounded bg-brand px-4 py-2 font-bold text-white"
           >
             確認
           </button>

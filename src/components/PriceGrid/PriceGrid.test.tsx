@@ -2,9 +2,11 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PriceGrid } from './PriceGrid';
 import { useCartStore } from '@/stores/useCartStore';
+import { useSessionStore } from '@/stores/useSessionStore';
 
 beforeEach(() => {
   useCartStore.getState().clearCart();
+  useSessionStore.getState().resetAll();
 });
 
 describe('PriceGrid', () => {
@@ -34,6 +36,7 @@ describe('PriceGrid', () => {
   });
 
   it('adds item to cart when product button clicked', async () => {
+    useSessionStore.getState().startSession();
     render(<PriceGrid />);
     await userEvent.click(screen.getByRole('button', { name: /小泡芙/ }));
     expect(useCartStore.getState().items).toHaveLength(1);
@@ -41,6 +44,7 @@ describe('PriceGrid', () => {
   });
 
   it('adds merged item to cart by price when clicked', async () => {
+    useSessionStore.getState().startSession();
     render(<PriceGrid />);
     // use variant text to specifically target the $60 瑪德蓮 button
     await userEvent.click(screen.getByRole('button', { name: /蜂蜜/ }));
@@ -53,16 +57,31 @@ describe('PriceGrid', () => {
   });
 
   it('opens custom amount input when custom button clicked', async () => {
+    useSessionStore.getState().startSession();
     render(<PriceGrid />);
     await userEvent.click(screen.getByRole('button', { name: /自訂/i }));
     expect(screen.getByPlaceholderText(/金額/i)).toBeInTheDocument();
   });
 
   it('adds custom amount to cart on confirm', async () => {
+    useSessionStore.getState().startSession();
     render(<PriceGrid />);
     await userEvent.click(screen.getByRole('button', { name: /自訂/i }));
     await userEvent.type(screen.getByPlaceholderText(/金額/i), '75');
     await userEvent.click(screen.getByRole('button', { name: /確認/i }));
     expect(useCartStore.getState().items[0].price).toBe(75);
+  });
+
+  it('all buttons are disabled when no active session', () => {
+    render(<PriceGrid />);
+    screen.getAllByRole('button').forEach((btn) => {
+      expect(btn).toBeDisabled();
+    });
+  });
+
+  it('buttons are enabled when session is active', () => {
+    useSessionStore.getState().startSession();
+    render(<PriceGrid />);
+    expect(screen.getByRole('button', { name: /小泡芙/ })).not.toBeDisabled();
   });
 });

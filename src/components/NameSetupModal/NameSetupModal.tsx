@@ -29,7 +29,7 @@ export function NameSetupModal({ onSave }: NameSetupModalProps) {
         />
         <button
           onClick={handleConfirm}
-          className="w-full rounded-xl bg-amber-400 p-3 font-bold text-lg"
+          className="w-full rounded-xl bg-brand p-3 font-bold text-lg text-white"
         >
           確認
         </button>

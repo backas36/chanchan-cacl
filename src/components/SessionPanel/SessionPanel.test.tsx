@@ -32,29 +32,20 @@ describe('SessionPanel', () => {
     expect(useSessionStore.getState().activeSession).toBeNull();
   });
 
-  it('shows current session total', () => {
-    useSessionStore.getState().startSession();
-    render(<SessionPanel userName="Ashi" />);
-    expect(screen.getByText(/\$0/)).toBeInTheDocument();
-  });
-
   it('shows user name', () => {
     render(<SessionPanel userName="Ashi" />);
     expect(screen.getByText(/Ashi/)).toBeInTheDocument();
   });
 
-  it('copies summary to clipboard', async () => {
+  it('does not show session total', () => {
     useSessionStore.getState().startSession();
-    useSessionStore.getState().addTransaction({
-      items: [{ price: 100, quantity: 1 }],
-      subtotal: 100,
-      discount: 0,
-      total: 100,
-      received: 100,
-      change: 0,
-    });
     render(<SessionPanel userName="Ashi" />);
-    await userEvent.click(screen.getByRole('button', { name: /複製/i }));
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining('Ashi'));
+    expect(screen.queryByText(/\$\d/)).not.toBeInTheDocument();
+  });
+
+  it('does not show copy button', () => {
+    useSessionStore.getState().startSession();
+    render(<SessionPanel userName="Ashi" />);
+    expect(screen.queryByRole('button', { name: /複製/i })).not.toBeInTheDocument();
   });
 });

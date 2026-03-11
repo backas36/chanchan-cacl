@@ -25,7 +25,7 @@ export function DiscountPanel({ discount, onDiscountChange }: DiscountPanelProps
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-500">折扣</span>
+        <span className="text-sm text-sage">折扣</span>
         <span className="font-bold text-red-500">{discount}</span>
       </div>
 

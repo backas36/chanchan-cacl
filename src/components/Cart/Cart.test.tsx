@@ -2,9 +2,11 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Cart } from './Cart';
 import { useCartStore } from '@/stores/useCartStore';
+import { useSessionStore } from '@/stores/useSessionStore';
 
 beforeEach(() => {
   useCartStore.getState().clearCart();
+  useSessionStore.getState().resetAll();
 });
 
 describe('Cart', () => {
@@ -37,6 +39,7 @@ describe('Cart', () => {
   });
 
   it('removes item when minus button clicked', async () => {
+    useSessionStore.getState().startSession();
     useCartStore.getState().addItem(100);
     render(<Cart onCheckout={() => {}} />);
     await userEvent.click(screen.getByRole('button', { name: /-/ }));
@@ -44,6 +47,7 @@ describe('Cart', () => {
   });
 
   it('clears all items when clear button clicked', async () => {
+    useSessionStore.getState().startSession();
     useCartStore.getState().addItem(100);
     useCartStore.getState().addItem(50);
     render(<Cart onCheckout={() => {}} />);
@@ -52,6 +56,7 @@ describe('Cart', () => {
   });
 
   it('calls onCheckout when checkout button clicked', async () => {
+    useSessionStore.getState().startSession();
     useCartStore.getState().addItem(100);
     const onCheckout = vi.fn();
     render(<Cart onCheckout={onCheckout} />);
@@ -60,7 +65,15 @@ describe('Cart', () => {
   });
 
   it('checkout button is disabled when cart is empty', () => {
+    useSessionStore.getState().startSession();
     render(<Cart onCheckout={() => {}} />);
     expect(screen.getByRole('button', { name: /結帳/i })).toBeDisabled();
+  });
+
+  it('checkout and clear buttons are disabled when no active session', () => {
+    useCartStore.getState().addItem(100);
+    render(<Cart onCheckout={() => {}} />);
+    expect(screen.getByRole('button', { name: /結帳/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /清空/i })).toBeDisabled();
   });
 });
