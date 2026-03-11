@@ -6,7 +6,6 @@ interface TransactionHistoryProps {
   sessions: Session[];
   activeSession: Session | null;
   userName: string;
-  onResetAll: () => void;
 }
 
 const priceToLabel = new Map(itemData.items.map((item) => [item.price, item.label]));
@@ -15,12 +14,12 @@ function formatTime(iso: string): string {
   return new Date(iso).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
 }
 
-export function TransactionHistory({ sessions, activeSession, userName, onResetAll }: TransactionHistoryProps) {
+export function TransactionHistory({ sessions, activeSession, userName }: TransactionHistoryProps) {
   const [expandedTxId, setExpandedTxId] = useState<string | null>(null);
   const [copiedSessionId, setCopiedSessionId] = useState<string | null>(null);
   const allSessions = activeSession ? [activeSession, ...sessions] : sessions;
   const sortedSessions = [...allSessions].sort(
-    (a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
+    (a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime(),
   );
 
   const handleCopySession = async (session: Session) => {
@@ -43,14 +42,6 @@ export function TransactionHistory({ sessions, activeSession, userName, onResetA
     setTimeout(() => setCopiedSessionId(null), 2000);
   };
 
-  const handleReset = () => {
-    if (window.confirm('⚠️ 確定要重置所有資料嗎？這會刪除你的名字、場次、業績紀錄，且不可復原！')) {
-      if (window.confirm('🔥 真的確定？這是最後一次確認！所有紀錄都會消失！')) {
-        onResetAll();
-      }
-    }
-  };
-
   return (
     <div className='space-y-4'>
       {sortedSessions.length === 0 ? (
@@ -64,7 +55,7 @@ export function TransactionHistory({ sessions, activeSession, userName, onResetA
           return (
             <div key={session.id} className='rounded-xl bg-white p-4 shadow-sm'>
               <div className='mb-2 flex items-center justify-between'>
-                <span className='text-sm text-gray-500'>
+                <span className='text-sm font-bold text-gray-600'>
                   {date}　{startTime} ~ {endTime}
                 </span>
                 <span className='text-lg font-bold'>${session.sessionTotal}</span>
@@ -113,22 +104,12 @@ export function TransactionHistory({ sessions, activeSession, userName, onResetA
                 onClick={() => handleCopySession(session)}
                 className={`mt-2 w-full rounded-lg py-2 text-sm font-medium ${copiedSessionId === session.id ? 'bg-green-100 text-green-700' : 'bg-gray-100'}`}
               >
-                {copiedSessionId === session.id ? '✓ 已複製' : '複製結果'}
+                {copiedSessionId === session.id ? '✓ 已複製' : '複製你的業績❤️'}
               </button>
             </div>
           );
         })
       )}
-
-      {/* 隱藏的重置按鈕 */}
-      <div className='mt-20 pb-10'>
-        <button
-          onClick={handleReset}
-          className='absolute bottom-6 rounded-lg border border-red-50 px-2 py-1 text-[10px] font-medium text-red-200 active:bg-red-50'
-        >
-          重置全部資料
-        </button>
-      </div>
     </div>
   );
 }

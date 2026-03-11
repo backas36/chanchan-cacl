@@ -25,6 +25,14 @@ function App() {
     return <NameSetupModal onSave={setUserName} />;
   }
 
+  const handleReset = () => {
+    if (window.confirm('⚠️ 確定要重置所有資料嗎？這會刪除你的名字、場次、業績紀錄，且不可復原！')) {
+      if (window.confirm('🔥 真的確定？這是最後一次確認！所有紀錄都會消失！')) {
+        handleResetAll();
+      }
+    }
+  };
+
   return (
     <div className='bg-cream flex h-dvh flex-col'>
       {/* Header — 固定置頂 */}
@@ -48,15 +56,18 @@ function App() {
             )}
           </>
         ) : (
-          <TransactionHistory
-            sessions={sessions}
-            activeSession={activeSession}
-            userName={userName}
-            onResetAll={handleResetAll}
-          />
+          <TransactionHistory sessions={sessions} activeSession={activeSession} userName={userName} />
         )}
       </div>
-
+      {/* 隱藏的重置按鈕 */}
+      {tab === 'history' && (
+        <button
+          onClick={handleReset}
+          className='absolute bottom-[6dvh] rounded-lg border border-red-50 px-2 py-1 text-[10px] font-medium text-red-200 active:bg-red-50'
+        >
+          重置全部資料
+        </button>
+      )}
       {/* Bottom Tabs — 固定置底 */}
       <div className='flex shrink-0 border-t bg-white'>
         <button
