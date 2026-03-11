@@ -12,7 +12,7 @@ interface TransactionHistoryProps {
 const priceToLabel = new Map(itemData.items.map((item) => [item.price, item.label]));
 
 function formatTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+  return new Date(iso).toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
 }
 
 export function TransactionHistory({ sessions, activeSession, userName, onResetAll }: TransactionHistoryProps) {
@@ -81,6 +81,7 @@ export function TransactionHistory({ sessions, activeSession, userName, onResetA
                         {new Date(tx.timestamp).toLocaleTimeString('zh-TW', {
                           hour: '2-digit',
                           minute: '2-digit',
+                          hour12: false,
                         })}
                       </span>
                       <span>
