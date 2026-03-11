@@ -2,7 +2,7 @@
   "items": [
     { "price": 50, "label": "餅乾", "variants": ["布朗妮", "檸檬糖霜"] },
     { "price": 60, "label": "瑪德蓮", "variants": ["蜂蜜", "可可", "泰奶", "黑糖"] },
-    { "price": 80, "label": "檸檬瑪德蓮", "variants": [] },
+    { "price": 80, "label": "香蕉蛋糕", "variants": [] },
     { "price": 100, "label": "小泡芙", "variants": [] },
     { "price": 160, "label": "Oreo雪Q餅", "variants": [] },
     { "price": 180, "label": "金沙雪Q餅", "variants": [] },

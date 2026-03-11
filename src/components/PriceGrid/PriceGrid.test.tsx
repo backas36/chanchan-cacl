@@ -12,9 +12,9 @@ beforeEach(() => {
 describe('PriceGrid', () => {
   it('renders all product labels', () => {
     render(<PriceGrid />);
-    // $60 瑪德蓮 button — match by variant text to avoid conflict with 檸檬瑪德蓮
+    // $60 瑪德蓮 button — match by variant text to avoid conflict with 香蕉蛋糕
     expect(screen.getByRole('button', { name: /蜂蜜/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /檸檬瑪德蓮/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /香蕉蛋糕/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /餅乾/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /小泡芙/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Oreo雪Q餅/ })).toBeInTheDocument();
